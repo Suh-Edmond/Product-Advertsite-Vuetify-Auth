@@ -28,7 +28,7 @@ export default new VueRouter({
             name:"ProductDetails"
         },
         {
-            path:'/user/products/add',
+            path:'/products/add',
             component:AddProduct,
             name:"AddProduct"
         },

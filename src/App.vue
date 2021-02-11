@@ -65,7 +65,7 @@
       app
       color="primary"
       dark
-         
+      dense 
     >
     <v-app-bar-nav-icon @click.native="drawer = true" class="d-sm-none"></v-app-bar-nav-icon>
       <v-toolbar-title><h3>Product Advert</h3></v-toolbar-title>
@@ -93,7 +93,7 @@
             <v-icon left>login</v-icon>Sign In
           </v-btn>
           <v-btn text>
-            <v-icon left>logout</v-icon>Logout
+            <v-icon left>person</v-icon>Name
           </v-btn>
       </v-toolbar-items>
     </v-app-bar>
@@ -101,6 +101,22 @@
     <v-main>
      <router-view></router-view>
     </v-main>
+     <v-footer
+        dark
+        padless
+      >
+        <v-card
+          class="flex"
+          flat
+          tile
+        >
+
+      <v-card-text class="py-2 white--text text-center">
+        Copyright &copy; {{ new Date().getFullYear() }} — <strong>All Rights Reserve. </strong>
+      
+      </v-card-text>
+    </v-card>
+  </v-footer>
   </v-app>
 </template>
 
@@ -115,7 +131,13 @@ export default {
   },
 
   data: () => ({
-    drawer:false
+    drawer:false,
+    icons: [
+        'facebook',
+        'mdi-twitter',
+        'mdi-linkedin',
+        'mdi-instagram',
+      ],
   }),
 };
 </script>
