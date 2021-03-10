@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import  firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -7,117 +8,92 @@ export default new Vuex.Store({
     namespaced:true,
     state: {
         products: [
-            {
-                id:1,
-                name:"Product 1",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:2,
-                name:"Product 2",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:3,
-                name:"Product 3",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:4,
-                name:"Product 4",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:5,
-                name:"Product 5",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:6,
-                name:"Product 6",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:7,
-                name:"Product 7",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:8,
-                name:"Product 8",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
-            {
-                id:9,
-                name:"Product 9 laptop",
-                price:789,
-                quantity:89,
-                description:'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis falsestrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                condition:'Great',
-                image:'https://cdn.vuetifyjs.com/images/cards/cooking.png'
-            },
         ],
-    users: [
-        {
-            id:'userid1',
-            name:'Johndoe',
-            email:"johndoe@gmail.com",
-            telephone:'689394029042',
-            products:["id1", "id3"]
-        }
-    ]
+    users: null,
+    loading:false,
+    error:false,
+    clearerror:false
     },
     getters: {
         productList:(state)=> {
             return state.products
+        },
+        getUser(state)
+        {
+            return state.users
         }
     },
     actions: {
         DeleteProduct:({commit}, payload) => {
-            commit('Delete', payload)
+            console.log(payload)
+            firebase.database().ref("products").child(payload).remove().
+            then(() => {
+                commit('Delete', payload)
+            })
+            
         },
-        CreateProduct({commit}, payload)
+        getProducts({commit})
+        {
+            firebase.database().ref("products").once('value').
+            then(data => {
+                const loadedProducts =[]
+                const obj = data.val()
+                for(let key in obj)
+                {
+                    loadedProducts.push({
+                        id:key,
+                        name:obj[key].name,
+                        description: obj[key].description,
+                        quantity:obj[key].quantity,
+                        price: obj[key].price,
+                        condition: obj[key].condition,
+                        userId:obj[key].userId,
+                        image:obj[key].image
+                    })
+                }
+                commit("SetProducts", loadedProducts)
+            }).
+            catch(err =>{
+                console.log(err)
+            })
+        },
+        CreateProduct({commit,getters}, payload)
         {
             const newProduct = {
                 name:payload.name,
                 price:payload.price,
                 quantity: payload.quantity,
                 description: payload.description,
-                condition: payload.condition
+                condition: payload.condition,
+                userId:getters.getUser.id
             } 
-            commit('CreateProduct', newProduct)
+            let key
+          //  let imageUrl
+            firebase.database().ref("products").push(newProduct).
+            then( data => {
+                key = data.key
+                return key
+            }).then(key => {
+                const filename = payload.image.name
+                const fileExtension = filename.slice(filename.lastIndexOf('.'))
+                return firebase.storage().ref('products/' + key + fileExtension).put(payload.image)
+            }).
+            then(fileData => {
+                    return fileData.ref.getDownloadURL()  
+            }).
+            then(url => {
+                console.log(url)
+                commit("CreateProduct", {
+                    ...newProduct,
+                    image:url,
+                    id:key
+                })
+                return firebase.database().ref("products").child(key).update({imageUrl:url}) 
+            })
+            .catch(e=>{
+                console.log(e)
+            })
+            
         },
         UpdateProduct({commit}, payload)
         {
@@ -129,7 +105,51 @@ export default new Vuex.Store({
                 condition:payload.condition,
                 id:payload.id
             }
-            commit('UpdateProduct', updatedProduct)
+            firebase.database().ref("products").child(updatedProduct.id).update(updatedProduct).
+            then(() => {
+                commit('UpdateProduct', updatedProduct)
+            })
+        },
+        Register({commit},payload)
+        {
+           firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).
+           then( user =>{
+               console.log(user)
+               const newUser = {
+                   id:firebase.auth().currentUser.uid,
+                   products:[]
+               }
+               commit("SetUser", newUser)
+           }).catch(err => {
+               console.log(err)
+           })
+            
+        },
+        Login({commit}, payload)
+        {
+             
+            firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).
+            then (user =>{
+                console.log(user)
+                const signinUser = {
+                    id:firebase.auth().currentUser.uid,
+                    products: []
+                }
+                commit('SetUser', signinUser)
+            }).catch(e => {
+                console.log(e)
+                 
+            })
+        },
+        autoSign({commit}, payload)
+        {
+            console.log(payload)
+            commit("SetUser", {id:payload.uid, products:[]})
+        },
+        logout({commit})
+        {
+            firebase.auth().signOut()
+            commit("SetUser", null)
         }
     },
     mutations: {
@@ -141,10 +161,18 @@ export default new Vuex.Store({
            state.products.push(payload)
         },
         UpdateProduct(state, payload)
-        {
-            console.log(payload)
+        { 
             Object.assign(state.products[payload.id], payload)
+        },
+        SetUser(state, payload)
+        { 
+            state.users = payload
+        },
+        SetProducts(state, payload)
+        {
+            state.products = payload
         }
+         
     }
 })
 

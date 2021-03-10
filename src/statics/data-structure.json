@@ -1,0 +1,26 @@
+{
+    "products":[
+        {
+            "name":"Laptop1",
+            "price":"5784",
+            "quantity":"8594",
+            "description":"A product",
+            "condition":"Great",
+            "image":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
+        },
+        {
+            "name":"Laptop3",
+            "price":"5784",
+            "quantity":"8594",
+            "description":"A product",
+            "condition":"Great",
+            "image":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
+        }
+    ],
+    "users":{
+        "name":"John doe",
+        "email":"jane@gmail.com",
+        "telephone":"960455",
+        "products":[]
+    }
+}

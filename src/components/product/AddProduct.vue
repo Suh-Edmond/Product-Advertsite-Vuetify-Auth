@@ -55,21 +55,19 @@
                             label="Condition"
                             required
                             ></v-select>
-                            <!-- <v-text-field
-                            v-model="image"
-                            dense
-                            outlined
-                            name="image"
-                            id="image"
-                            label="Product Image"
-                            :rules="[v => !!v || 'please upload product image']"
-                            type="file"
-                            >
-                            </v-text-field> -->
+                            <v-btn raised class="primary btn" @click="pickFile">Upload Image</v-btn>
+                            <input 
+                                type="file" 
+                                style="display:none" 
+                                ref="fileInput" 
+                                accept="image/*" 
+                                @change="onPickFile"
+                            />
+                            <div class="pt-2 mb-9" justify="center"><img :src="imageUrl" height="160px" width="230px"/></div>
                         <v-card-actions class="justify-center">
                         <v-btn
                             color="primary"
-                            class="mb-3 btn"
+                            class="mb-6 btn"
                             @click="submit"
                             :disabled="!FormIsValid"
                             >
@@ -93,17 +91,44 @@ export default {
             price:null,
             description:null,
             quantity:null,
-            condition:null
+            condition:null,
+            image:null
         },
+        imageUrl:null,
+        imageName:'',
         items: ["Good", "Robust", "Poor", "Great"],
     }),
      methods: {
       submit () {
-        this.$store.dispatch("CreateProduct", this.product).then(
+            
+            this.$store.dispatch("CreateProduct", this.product).then(
             this.$router.push('/user/products')
-        )
+       )
       },
-      
+      pickFile()
+      {
+        this.$refs.fileInput.click()
+      },
+      onPickFile(event)
+      {
+           const files = event.target.files
+           if(files[0] !== undefined){
+               this.imageName = files[0].name
+              if(this.imageName.lastIndexOf('.') <= 0){
+                  return
+              }
+              const fileReader = new FileReader()
+              fileReader.readAsDataURL(files[0])
+              fileReader.addEventListener('load', () => {
+                  this.imageUrl = fileReader.result,
+                  this.product.image = files[0]
+              })
+           }else {
+               this.imageUrl= null,
+               this.imageName=null,
+               this.product.image=null
+           }
+      }
     },
     computed: {
         FormIsValid()
@@ -113,6 +138,7 @@ export default {
                 this.product.quantity !== null &&
                 this.product.description !== null &&
                 this.product.condition !== null
+                
         }
     }
 }

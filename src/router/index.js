@@ -8,6 +8,7 @@ import ProductDetails from '@/components/product/ProductDetails.vue'
 import AddProduct from '@/components/product/AddProduct.vue'
 import Register from '@/components/user/Register.vue'
 import Login from '@/components/user/Login.vue'
+import AuthGuard from '@/router/auth-guard.js'
 export default new VueRouter({
     mode: 'history',
     base: __dirname,
@@ -25,12 +26,14 @@ export default new VueRouter({
         {
             path:'/user/products/:id',
             component:ProductDetails,
-            name:"ProductDetails"
+            name:"ProductDetails",
+            beforeEnter:AuthGuard
         },
         {
             path:'/products/add',
             component:AddProduct,
-            name:"AddProduct"
+            name:"AddProduct",
+            beforeEnter:AuthGuard
         },
          {
             path:'/user/register',

@@ -4,28 +4,33 @@
             <v-row justify="center">
                 <v-col class="col-6">
                     <v-card
-                        class="mx-auto my-4"
+                        class="mt-5"
                     >
-                        <v-img
-                        height="250"
-                        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                        ></v-img>
-
+                       <div class="pa-6">
+                            <v-img
+                             height="350"
+                            :src="productDetails.image"
+                            
+                            ></v-img>
+                        </div>
                         <v-card-title>{{productDetails.name}}</v-card-title>
-                        <v-card-subtitle-1 class="pl-4 pb-1 pt-none">Price:   {{productDetails.price}} XFA</v-card-subtitle-1> 
-                        <br/>
-                        <v-card-subtitle-1  class="pl-4">Quantity:   {{productDetails.quantity}} in Stock</v-card-subtitle-1>
-                        <br/>
-                        <v-card-subtitle-1  class="pl-4">Condition:   {{productDetails.condition}}</v-card-subtitle-1>
+                        <v-card-subtitle class="pl-4 pb-1 pt-none">
+                            <h4>
+                            Price:   {{productDetails.price}} XFA
+                            <br/>
+                            Quantity:   {{productDetails.quantity}} in Stock
+                            <br/>
+                            Condition:   {{productDetails.condition}}</h4>
+                        </v-card-subtitle>
                         <v-card-text>
-                            <div>
+                            <div  class="mb-8">
                                 <v-card>
-                                    <v-card-subtitle-1 class="pa-3">Description</v-card-subtitle-1>
-                                    <v-card-text>{{productDetails.description}} </v-card-text>
+                                    <v-card-text class="pa-3"><h3>Description</h3></v-card-text>
+                                    <v-card-text><h4>{{productDetails.description}}</h4> </v-card-text>
                                 </v-card>
                             </div>
                         </v-card-text>
-                        <v-card-actions class="mt-7 mr-2">
+                        <v-card-actions class="mt-5 mr-2 mb-8" v-if="userProduct === productDetails.userId">
                             <v-spacer></v-spacer>
                             <v-btn
                                 color="secondary"
@@ -115,7 +120,13 @@ export default {
                   productObj.push(this.products[i])
               }
           }
+          
+          console.log(productObj[0])
           return productObj[0]
+      },
+      userProduct()
+      {
+          return this.$store.getters.getUser.id
       }
     },
     components:{

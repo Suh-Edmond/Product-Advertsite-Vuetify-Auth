@@ -40,7 +40,10 @@ import {mapGetters} from 'vuex'
     methods:{
       
     },
-  
+    created()
+    {
+      this.$store.dispatch("getProducts")
+    }
     
   }
 </script>

@@ -26,7 +26,7 @@
             </v-row>
         </div>
         <!-- slot for add product -->
-        <div class="d-flex justify-end pt-3 mr-3" >
+        <div class="d-flex justify-end pt-3 mr-3 mb-8" >
             <v-btn fab fixed bottom color="primary" to="/products/add">
             <v-icon dark>
                 add

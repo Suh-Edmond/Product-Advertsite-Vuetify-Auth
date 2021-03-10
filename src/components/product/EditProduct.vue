@@ -4,7 +4,6 @@
         <v-toolbar
               dark
               color="primary"
-               
               >
               <v-toolbar-title>Update Product</v-toolbar-title>
               <v-spacer></v-spacer>

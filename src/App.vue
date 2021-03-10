@@ -74,10 +74,10 @@
       <v-toolbar-items class="d-sm-flex">
           
           <v-btn text to="/">
-            <v-icon left>home</v-icon>Home
+            <v-icon left></v-icon>Market Products
           </v-btn>
            
-          <v-btn text to="/user/products">
+          <v-btn text to="/user/products" v-if="isAuthenticated">
             <v-icon left></v-icon>My Products
           </v-btn>
             <v-btn text to="#">
@@ -86,15 +86,38 @@
             <v-btn text to="#">
             <v-icon left></v-icon>About us
           </v-btn>
-          <v-btn text to="/user/register">
+          <v-btn text to="/user/register" v-if="!isAuthenticated">
             <v-icon left>person_add</v-icon>Sign Up
           </v-btn>
-          <v-btn text to="/user/login">
-            <v-icon left>login</v-icon>Sign In
-          </v-btn>
-          <v-btn text>
-            <v-icon left>person</v-icon>Name
-          </v-btn>
+          
+           <v-menu offset-y v-if="isAuthenticated">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                text
+              >
+                <v-icon left>person</v-icon>
+              </v-btn>
+            </template>
+            <v-card class="mx-auto"
+               max-width="330"
+            >
+            <v-list dense>
+             <v-list-item-group
+                color="primary"
+              >
+                <v-list-item
+                >
+                  <v-list-item-content>
+                    
+                    <v-list-item-title @click="logout"> <v-icon left>logout</v-icon>Logout</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+            </v-card>
+          </v-menu>
       </v-toolbar-items>
     </v-app-bar>
 
@@ -139,5 +162,17 @@ export default {
         'mdi-instagram',
       ],
   }),
+  computed: {
+    isAuthenticated()
+    {
+      return this.$store.getters.getUser !== null && this.$store.getters.getUser !== undefined
+    }
+  },
+  methods: {
+    logout()
+    {
+      this.$store.dispatch("logout")
+    }
+  }
 };
 </script>
