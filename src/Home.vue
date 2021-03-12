@@ -1,8 +1,22 @@
 <template>
     <v-container fluid class="my-4">
-         <div class="ml-none mb-5">
-            <h2>Our Products</h2>
-         </div>
+       <!-- alert feedback message -->
+        <v-row v-if="getLoadingState == true">
+            <v-col class="col-6"></v-col>
+            <v-col class="col-6">
+              <v-alert
+                      type="success"
+                      close-text="Close Alert"
+                      dark
+                      dismissible
+              >
+              Account was successfully created
+              </v-alert>
+            </v-col>
+        </v-row>
+        <div class="ml-none mb-5">
+          <h2>Our Products</h2>
+        </div>
         <div>
             <v-row dense  class="row-12" justify="center">
                  <v-col v-for="(product, index) in products" :key="index" class="col-4">
@@ -35,7 +49,7 @@ import {mapGetters} from 'vuex'
        options:["Good", "Robust", "Poor", "Great"],
     }),
     computed: {
-      ...mapGetters({products:'productList'}) 
+      ...mapGetters({products:'productList',getLoadingState:'getLoadingState'}) 
     },
     methods:{
       

@@ -73,11 +73,11 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="d-sm-flex">
           
-          <v-btn text to="/">
+          <v-btn text :to="{name:'Welcome'}">
             <v-icon left></v-icon>Market Products
           </v-btn>
            
-          <v-btn text to="/user/products" v-if="isAuthenticated">
+          <v-btn text :to="{name:'UserProduct'}" v-if="isAuthenticated">
             <v-icon left></v-icon>My Products
           </v-btn>
             <v-btn text to="#">
@@ -86,7 +86,7 @@
             <v-btn text to="#">
             <v-icon left></v-icon>About us
           </v-btn>
-          <v-btn text to="/user/register" v-if="!isAuthenticated">
+          <v-btn text :to="{name:'Register'}" v-if="!isAuthenticated">
             <v-icon left>person_add</v-icon>Sign Up
           </v-btn>
           
