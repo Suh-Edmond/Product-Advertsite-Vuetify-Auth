@@ -21,6 +21,10 @@ export default new Vuex.Store({
         getUser(state)
         {
             return state.users
+        },
+        getLoadingState(state)
+        {
+            return state.loading
         }
     },
     actions: {
@@ -113,16 +117,17 @@ export default new Vuex.Store({
         Register({commit},payload)
         {
            firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).
-           then( user =>{
-               console.log(user)
+           then(user =>{
+               commit("SetLoadingState")
                const newUser = {
                    id:firebase.auth().currentUser.uid,
                    products:[]
                }
-               commit("SetUser", newUser)
+                commit("SetUser", newUser)
+               return user
            }).catch(err => {
                console.log(err)
-           })
+           }) 
             
         },
         Login({commit}, payload)
@@ -167,6 +172,10 @@ export default new Vuex.Store({
         SetUser(state, payload)
         { 
             state.users = payload
+        },
+        SetLoadingState(state)
+        {
+            state.loading = true
         },
         SetProducts(state, payload)
         {

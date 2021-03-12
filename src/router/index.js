@@ -6,8 +6,7 @@ import Home from '@/Home.vue'
 import ProductList from '@/components/product/ProductList.vue'
 import ProductDetails from '@/components/product/ProductDetails.vue'
 import AddProduct from '@/components/product/AddProduct.vue'
-import Register from '@/components/user/Register.vue'
-import Login from '@/components/user/Login.vue'
+import Authentication from '@/components/user/Authentication.vue'
 import AuthGuard from '@/router/auth-guard.js'
 export default new VueRouter({
     mode: 'history',
@@ -36,13 +35,13 @@ export default new VueRouter({
             beforeEnter:AuthGuard
         },
          {
-            path:'/user/register',
-            component:Register,
+            path:'/register',
+            component:Authentication,
             name:"Register"
         },
          {
-            path:'/user/login',
-            component:Login,
+            path:'/login',
+            component:Authentication,
             name:"Login"
         },
         
