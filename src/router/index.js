@@ -7,6 +7,7 @@ import ProductList from '@/components/product/ProductList.vue'
 import ProductDetails from '@/components/product/ProductDetails.vue'
 import AddProduct from '@/components/product/AddProduct.vue'
 import Authentication from '@/components/user/Authentication.vue'
+import Profile from '@/components/user/Profile.vue'
 import AuthGuard from '@/router/auth-guard.js'
 export default new VueRouter({
     mode: 'history',
@@ -32,6 +33,12 @@ export default new VueRouter({
             path:'/products/add',
             component:AddProduct,
             name:"AddProduct",
+            beforeEnter:AuthGuard
+        },
+        {
+            path:'/user/profile',
+            component:Profile,
+            name:'UserProfile',
             beforeEnter:AuthGuard
         },
          {

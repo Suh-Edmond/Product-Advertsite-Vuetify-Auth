@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid class="my-4">
+    <v-container fluid >
        <!-- alert feedback message -->
-        <v-row v-if="getLoadingState == true">
+        <v-row v-if="isloading">
             <v-col class="col-6"></v-col>
             <v-col class="col-6">
               <v-alert
@@ -14,6 +14,8 @@
               </v-alert>
             </v-col>
         </v-row>
+          
+  
         <div class="ml-none mb-5">
           <h2>Our Products</h2>
         </div>
@@ -47,9 +49,10 @@ import {mapGetters} from 'vuex'
   export default { 
     data: () => ({
        options:["Good", "Robust", "Poor", "Great"],
+       
     }),
     computed: {
-      ...mapGetters({products:'productList',getLoadingState:'getLoadingState'}) 
+      ...mapGetters({products:'productList', isloading:'getLoadState'}) 
     },
     methods:{
       

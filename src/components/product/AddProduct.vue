@@ -1,5 +1,7 @@
 <template>
     <v-container>
+       
+         
         <div>
             <v-row class="justify-center">
                 <v-col class="col-6">
@@ -94,16 +96,16 @@ export default {
             condition:null,
             image:null
         },
+        
         imageUrl:null,
         imageName:'',
         items: ["Good", "Robust", "Poor", "Great"],
     }),
      methods: {
       submit () {
-            
-            this.$store.dispatch("CreateProduct", this.product).then(
-            this.$router.push('/user/products')
-       )
+            this.$store.dispatch("CreateProduct", this.product).then(()=>{
+                this.$router.push('/user/products')
+            })
       },
       pickFile()
       {
