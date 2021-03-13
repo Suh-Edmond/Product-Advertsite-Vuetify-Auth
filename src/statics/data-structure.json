@@ -6,7 +6,7 @@
             "quantity":"8594",
             "description":"A product",
             "condition":"Great",
-            "image":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
+            "imageUrl":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
         },
         {
             "name":"Laptop3",
@@ -14,13 +14,13 @@
             "quantity":"8594",
             "description":"A product",
             "condition":"Great",
-            "image":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
+            "imageUrl":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
         }
     ],
     "users":{
         "name":"John doe",
         "email":"jane@gmail.com",
-        "telephone":"960455",
+        "telephone":"96045599",
         "products":[]
     }
 }

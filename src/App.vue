@@ -24,7 +24,7 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item to="/user/products">
+          <v-list-item :to="{name:'UserProduct'}">
             <v-list-item-title>My Products</v-list-item-title>
           </v-list-item>
 
@@ -73,51 +73,65 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="d-sm-flex">
           
-          <v-btn text :to="{name:'Welcome'}">
-            <v-icon left></v-icon>Market Products
-          </v-btn>
-           
-          <v-btn text :to="{name:'UserProduct'}" v-if="isAuthenticated">
-            <v-icon left></v-icon>My Products
-          </v-btn>
-            <v-btn text to="#">
-            <v-icon left></v-icon>Contact us
-          </v-btn>
-            <v-btn text to="#">
-            <v-icon left></v-icon>About us
-          </v-btn>
-          <v-btn text :to="{name:'Register'}" v-if="!isAuthenticated">
-            <v-icon left>person_add</v-icon>Sign Up
-          </v-btn>
           
-           <v-menu offset-y v-if="isAuthenticated">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-                text
-              >
-                <v-icon left>person</v-icon>
-              </v-btn>
-            </template>
-            <v-card class="mx-auto"
-               max-width="330"
-            >
-            <v-list dense>
-             <v-list-item-group
-                color="primary"
-              >
-                <v-list-item
-                >
-                  <v-list-item-content>
-                    
-                    <v-list-item-title @click="logout"> <v-icon left>logout</v-icon>Logout</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-            </v-card>
-          </v-menu>
+          <v-tabs
+            color="primary"
+            background-color="primary"
+            active-class="dark"
+            grow
+          >
+              <v-tab @change="SetUrl(welcome)">
+                Market Products
+              </v-tab>
+              <v-tab @change="SetUrl(product)" v-if="isAuthenticated">
+                My Products
+              </v-tab>
+              <v-tab @change="SetUrl(about)">
+                About us
+              </v-tab>
+              <v-tab @change="SetUrl(contact)">
+                Contact Us
+              </v-tab>
+              <v-tab @change="SetUrl(signin)" v-if="!isAuthenticated">
+                   <v-icon left>person_add</v-icon>SIGN IN
+              </v-tab>
+              <v-tab  v-if="isAuthenticated" >
+                  <v-menu offset-y>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
+                          text
+                        >
+                        John doe 
+                        </v-btn>
+                      </template> 
+                      <v-card class="mx-auto"
+                        max-width="330"
+                      >
+                        <v-list dense>
+                        <v-list-item-group
+                            color="primary"
+                          >
+                            <v-list-item
+                            >
+                              <v-list-item-content>
+                                <v-list-item-title @click="logout"> <v-icon left>logout</v-icon>Logout</v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item
+                            >
+                              <v-list-item-content>
+                                
+                                <v-list-item-title @click="profile"> <v-icon left>person</v-icon>Profile</v-list-item-title>
+                              </v-list-item-content>
+                            </v-list-item>
+                          </v-list-item-group>
+                        </v-list>
+                      </v-card>
+                  </v-menu>   
+              </v-tab>
+          </v-tabs>
       </v-toolbar-items>
     </v-app-bar>
 
@@ -155,6 +169,13 @@ export default {
 
   data: () => ({
     drawer:false,
+    user:null,
+    welcome:'/',
+    product:'/user/products',
+    contact:'#',
+    about:'#',
+    signin:'/register',
+     
     icons: [
         'facebook',
         'mdi-twitter',
@@ -172,7 +193,21 @@ export default {
     logout()
     {
       this.$store.dispatch("logout")
+    },
+    profile()
+    {
+      this.$store.dispatch("UserProfile").then(data => {
+        console.log(data)
+      })
+    },
+    SetUrl(item)
+    {
+        return this.$router.push(item)
     }
+  },
+  created()
+  {
+   // return this.user = this.$store.getters.getUser
   }
 };
 </script>

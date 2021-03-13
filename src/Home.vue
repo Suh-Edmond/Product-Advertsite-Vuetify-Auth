@@ -14,6 +14,27 @@
               </v-alert>
             </v-col>
         </v-row>
+         <!-- dialog for loading message -->
+        <div >
+            <v-dialog 
+                 v-model="getLoadingState"
+                 width="300"
+            >
+                <v-card>
+                    <div class="pt-7 pl-2 text-center">
+                        <p>Fetching Products! Please wait...</p>
+                        <v-progress-circular
+                            :size="70"
+                            :width="7"
+                            color="primary"
+                            indeterminate
+                        ></v-progress-circular>
+                    </div>
+                    
+                </v-card>
+            </v-dialog>
+            
+        </div>
         <div class="ml-none mb-5">
           <h2>Our Products</h2>
         </div>
@@ -47,9 +68,10 @@ import {mapGetters} from 'vuex'
   export default { 
     data: () => ({
        options:["Good", "Robust", "Poor", "Great"],
+       
     }),
     computed: {
-      ...mapGetters({products:'productList',getLoadingState:'getLoadingState'}) 
+      ...mapGetters({products:'productList',getLoadingState:'getLoadState'}) 
     },
     methods:{
       

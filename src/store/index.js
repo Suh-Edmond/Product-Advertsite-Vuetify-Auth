@@ -9,7 +9,7 @@ export default new Vuex.Store({
     state: {
         products: [
         ],
-    users: null,
+    user: null,
     loading:false,
     error:false,
     clearerror:false
@@ -20,16 +20,20 @@ export default new Vuex.Store({
         },
         getUser(state)
         {
-            return state.users
+            return state.user
         },
         getLoadingState(state)
+        {
+            return state.loading
+        },
+        getLoadState(state)
         {
             return state.loading
         }
     },
     actions: {
         DeleteProduct:({commit}, payload) => {
-            console.log(payload)
+           
             firebase.database().ref("products").child(payload).remove().
             then(() => {
                 commit('Delete', payload)
@@ -52,16 +56,16 @@ export default new Vuex.Store({
                         price: obj[key].price,
                         condition: obj[key].condition,
                         userId:obj[key].userId,
-                        image:obj[key].image
+                        image:obj[key].imageUrl
                     })
                 }
-                commit("SetProducts", loadedProducts)
+               commit("SetProducts", loadedProducts)
             }).
             catch(err =>{
                 console.log(err)
             })
         },
-        CreateProduct({commit,getters}, payload)
+        CreateProduct({commit, getters}, payload)
         {
             const newProduct = {
                 name:payload.name,
@@ -72,30 +76,25 @@ export default new Vuex.Store({
                 userId:getters.getUser.id
             } 
             let key
-          //  let imageUrl
+          //  create new product
             firebase.database().ref("products").push(newProduct).
-            then( data => {
+            then(data => {
+                commit("SetLoading", true)
                 key = data.key
                 return key
             }).then(key => {
                 const filename = payload.image.name
                 const fileExtension = filename.slice(filename.lastIndexOf('.'))
                 return firebase.storage().ref('products/' + key + fileExtension).put(payload.image)
-            }).
-            then(fileData => {
-                    return fileData.ref.getDownloadURL()  
-            }).
-            then(url => {
-                console.log(url)
-                commit("CreateProduct", {
-                    ...newProduct,
-                    image:url,
-                    id:key
-                })
-                return firebase.database().ref("products").child(key).update({imageUrl:url}) 
+            }).then(fileData => {
+                return fileData.ref.getDownloadURL()
+            }).then(url => {
+                firebase.database().ref('products').child(key).update({imageUrl:url})
             })
             .catch(e=>{
                 console.log(e)
+            }).finally(() => {
+                commit("SetLoading", false)
             })
             
         },
@@ -121,7 +120,6 @@ export default new Vuex.Store({
                commit("SetLoadingState")
                const newUser = {
                    id:firebase.auth().currentUser.uid,
-                   products:[]
                }
                 commit("SetUser", newUser)
                return user
@@ -138,7 +136,6 @@ export default new Vuex.Store({
                 console.log(user)
                 const signinUser = {
                     id:firebase.auth().currentUser.uid,
-                    products: []
                 }
                 commit('SetUser', signinUser)
             }).catch(e => {
@@ -155,15 +152,16 @@ export default new Vuex.Store({
         {
             firebase.auth().signOut()
             commit("SetUser", null)
-        }
+        },
+        // UserProfile()
+        // {
+        //    // let user = firebase.auth().currentUser
+        //     console.log(firebase.auth.getInstance().getCurrentUser
+        // }
     },
     mutations: {
         Delete:(state, payload)=>{
            state.products.splice((state.products.findIndex(product => product.id  === payload)), 1)
-        },
-        CreateProduct(state, payload)
-        {
-           state.products.push(payload)
         },
         UpdateProduct(state, payload)
         { 
@@ -171,7 +169,7 @@ export default new Vuex.Store({
         },
         SetUser(state, payload)
         { 
-            state.users = payload
+            state.user = payload
         },
         SetLoadingState(state)
         {
@@ -179,7 +177,11 @@ export default new Vuex.Store({
         },
         SetProducts(state, payload)
         {
-            state.products = payload
+            state.products = (payload)
+        },
+        SetLoading(state, payload)
+        {
+            state.loading = payload
         }
          
     }
