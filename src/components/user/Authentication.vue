@@ -8,8 +8,8 @@
                  width="300"
             >
                 <v-card>
-                    <div class="pt-3 pl-2">
-                        <p class="text-right">Creating your Account! Please wait...</p>
+                    <div class="pt-1 pl-2">
+                        <label class="pl-1">Creating your Account! Please wait...</label>
                         <v-progress-circular
                             :size="60"
                             :width="6"

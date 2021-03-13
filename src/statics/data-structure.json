@@ -17,10 +17,12 @@
             "imageUrl":"https://cdn.vuetifyjs.com/images/cards/cooking.png"
         }
     ],
-    "users":{
-        "name":"John doe",
-        "email":"jane@gmail.com",
-        "telephone":"96045599",
-        "products":[]
-    }
+    "users":[
+        {
+            "name":"John doe",
+            "email":"jane@gmail.com",
+            "telephone":"96045599"
+        }
+         
+    ]
 }

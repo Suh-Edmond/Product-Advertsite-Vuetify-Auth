@@ -18,14 +18,14 @@
         <div >
             <v-dialog 
                  v-model="getLoadingState"
-                 width="300"
+                 width="320"
             >
                 <v-card>
-                    <div class="pt-7 pl-2 text-center">
-                        <p>Fetching Products! Please wait...</p>
+                    <div class="pt-2 pl-2">
+                        <label>Fetching Products!Please wait...</label>
                         <v-progress-circular
-                            :size="70"
-                            :width="7"
+                            :size="40"
+                            :width="4"
                             color="primary"
                             indeterminate
                         ></v-progress-circular>

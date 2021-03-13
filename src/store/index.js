@@ -122,8 +122,16 @@ export default new Vuex.Store({
                    id:firebase.auth().currentUser.uid,
                }
                 commit("SetUser", newUser)
-               return user
-           }).catch(err => {
+                firebase.database().ref("users/" + newUser.id).set({
+                        name:payload.name,
+                        email:payload.email,
+                        telephone:payload.telephone
+                    }
+                )
+                return user
+               
+           }).
+           catch(err => {
                console.log(err)
            }) 
             
@@ -153,11 +161,31 @@ export default new Vuex.Store({
             firebase.auth().signOut()
             commit("SetUser", null)
         },
-        // UserProfile()
-        // {
-        //    // let user = firebase.auth().currentUser
-        //     console.log(firebase.auth.getInstance().getCurrentUser
-        // }
+        UserProfile({commit})
+        {
+          //  var user;
+            var userId = firebase.auth().currentUser.uid
+            var userRef = firebase.database().ref("users")
+            userRef.once("value").then(function(snapshot){
+              var user = snapshot.child(userId).val()
+              commit("SetUser", user)
+            }) 
+            
+        },
+        updateProfile({commit}, payload)
+        {
+            var userId = firebase.auth().currentUser.uid
+            const updatedUser = {
+                name: payload.name,
+                email:payload.email,
+                telephone:payload.telephone
+            }
+            firebase.database().ref("users").child(userId).update(updatedUser).then(() => {
+                commit("SetUser", updatedUser)
+            })
+             
+                
+        }
     },
     mutations: {
         Delete:(state, payload)=>{

@@ -1,9 +1,9 @@
 <template>
     <v-container fluid class="my-4">
         <!-- alert feedback message -->
-        <v-row v-if="userProducts.length == 0">
+        <v-row v-if="userProducts.length == 0" justify="center">
             
-            <v-col class="col-12">
+            <v-col class="col-6">
               <v-alert
                       type="warning"
                       close-text="Close Alert"
