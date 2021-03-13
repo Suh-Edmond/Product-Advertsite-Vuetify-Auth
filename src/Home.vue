@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid class="my-4">
+    <v-container fluid >
        <!-- alert feedback message -->
-        <v-row v-if="getLoadingState == true">
+        <v-row v-if="isloading">
             <v-col class="col-6"></v-col>
             <v-col class="col-6">
               <v-alert
@@ -14,27 +14,8 @@
               </v-alert>
             </v-col>
         </v-row>
-         <!-- dialog for loading message -->
-        <div >
-            <v-dialog 
-                 v-model="getLoadingState"
-                 width="320"
-            >
-                <v-card>
-                    <div class="pt-2 pl-2">
-                        <label>Fetching Products!Please wait...</label>
-                        <v-progress-circular
-                            :size="40"
-                            :width="4"
-                            color="primary"
-                            indeterminate
-                        ></v-progress-circular>
-                    </div>
-                    
-                </v-card>
-            </v-dialog>
-            
-        </div>
+          
+  
         <div class="ml-none mb-5">
           <h2>Our Products</h2>
         </div>
@@ -71,7 +52,7 @@ import {mapGetters} from 'vuex'
        
     }),
     computed: {
-      ...mapGetters({products:'productList',getLoadingState:'getLoadState'}) 
+      ...mapGetters({products:'productList', isloading:'getLoadState'}) 
     },
     methods:{
       

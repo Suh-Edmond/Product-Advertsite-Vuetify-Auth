@@ -1,21 +1,34 @@
 <template>
     <v-container>
-        
+            <!-- alert feedback message -->
+        <v-row v-if="getError" justify="center">
+            <v-col class="col-6">
+              <v-alert
+                      type="warning"
+                      close-text="Close Alert"
+                      dark
+                      dismissible
+              >
+             {{getError}}
+              </v-alert>
+            </v-col>
+        </v-row>
         <!-- dialog for loading message -->
-        <div >
+        <div v-if="!this.getError">
             <v-dialog 
                  v-model="dialog"
-                 width="300"
+                 width="350"
             >
                 <v-card>
-                    <div class="pt-1 pl-2">
-                        <label class="pl-1">Creating your Account! Please wait...</label>
+                    <div class="pa-2">
+                       
                         <v-progress-circular
                             :size="60"
-                            :width="6"
+                            :width="3"
                             color="primary"
                             indeterminate
                         ></v-progress-circular>
+                         <label>Processing request! Please wait...</label>
                     </div>
                     
                 </v-card>
@@ -151,7 +164,13 @@
                     this.dialog =  true
                 })
             }else{
-                this.$store.dispatch("Login", this.user) 
+                 
+                this.$store.dispatch("Login", this.user).then(() => {
+                    this.dialog = true
+                     
+                }).catch(e => {
+                    console.log(e)
+                })
             }
         },
         SetUrl(item)
@@ -179,7 +198,12 @@
         {
             return this.$store.getters.getUser
         },
+        getError()
+        {    
+            return this.$store.getters.getError
+        }
          
+
     },
     watch: {
         getUser(value)

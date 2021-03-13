@@ -6,9 +6,10 @@
                     <v-card
                         class="mt-5"
                     >
-                       <div class="pa-6">
+                       <div class="pa-6 text-center">
                             <v-img
                              height="350"
+                             
                             :src="productDetails.image"
                             
                             ></v-img>
@@ -58,9 +59,9 @@
         <div>
             <v-dialog 
                  v-model="dialog"
-                 width="300">
+                 width="360">
                 <v-card>
-                    <div class="pt-7 pl-2">
+                    <div class="pa-7">
                         <strong>Delete Product "{{productDetails.name}}"  ?</strong>
                     </div>
                     <v-card-actions>

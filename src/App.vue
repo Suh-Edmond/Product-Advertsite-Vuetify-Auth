@@ -203,6 +203,10 @@ export default {
         return this.$router.push(item)
     }
   },
+  mount()
+  {
+    this.userName = this.$store.getters.getUser.name
+  }
    
 };
 </script>

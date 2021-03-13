@@ -11,6 +11,7 @@ export default new Vuex.Store({
         ],
     user: null,
     loading:false,
+    loading1:false,
     error:false,
     clearerror:false
     },
@@ -22,13 +23,17 @@ export default new Vuex.Store({
         {
             return state.user
         },
-        getLoadingState(state)
+        getError(state)
         {
-            return state.loading
+            return state.error
         },
         getLoadState(state)
         {
             return state.loading
+        },
+        getLoading(state)
+        {
+            return state.loading1
         }
     },
     actions: {
@@ -115,12 +120,14 @@ export default new Vuex.Store({
         },
         Register({commit},payload)
         {
+            
            firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).
            then(user =>{
-               commit("SetLoadingState")
+               commit("SetLoadingState", true)
                const newUser = {
                    id:firebase.auth().currentUser.uid,
                }
+               
                 commit("SetUser", newUser)
                 firebase.database().ref("users/" + newUser.id).set({
                         name:payload.name,
@@ -132,8 +139,10 @@ export default new Vuex.Store({
                
            }).
            catch(err => {
-               console.log(err)
-           }) 
+               commit("SetError", err.message)
+           }).finally(() => {
+               commit("SetLoadingState", false)
+           })
             
         },
         Login({commit}, payload)
@@ -141,13 +150,14 @@ export default new Vuex.Store({
              
             firebase.auth().signInWithEmailAndPassword(payload.email, payload.password).
             then (user =>{
-                console.log(user)
                 const signinUser = {
                     id:firebase.auth().currentUser.uid,
+                     
                 }
                 commit('SetUser', signinUser)
+                return user
             }).catch(e => {
-                console.log(e)
+                commit("SetError", e.message)
                  
             })
         },
@@ -168,7 +178,13 @@ export default new Vuex.Store({
             var userRef = firebase.database().ref("users")
             userRef.once("value").then(function(snapshot){
               var user = snapshot.child(userId).val()
-              commit("SetUser", user)
+              var userDetails = {
+                  userId:userId,
+                  name:user.name,
+                  email:user.email,
+                  telephone:user.telephone
+              }
+              commit("SetUser", userDetails)
             }) 
             
         },
@@ -178,7 +194,8 @@ export default new Vuex.Store({
             const updatedUser = {
                 name: payload.name,
                 email:payload.email,
-                telephone:payload.telephone
+                telephone:payload.telephone,
+                userId:userId
             }
             firebase.database().ref("users").child(userId).update(updatedUser).then(() => {
                 commit("SetUser", updatedUser)
@@ -199,9 +216,9 @@ export default new Vuex.Store({
         { 
             state.user = payload
         },
-        SetLoadingState(state)
+        SetLoadingState(state, payload)
         {
-            state.loading = true
+            state.loading = payload
         },
         SetProducts(state, payload)
         {
@@ -209,7 +226,11 @@ export default new Vuex.Store({
         },
         SetLoading(state, payload)
         {
-            state.loading = payload
+            state.loading1 = payload
+        },
+        SetError(state, payload)
+        {
+            state.error = payload
         }
          
     }
